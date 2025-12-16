@@ -15,5 +15,6 @@ public class Product {
     public Product(String sku,String name,String category,BigDecimal price,Boolean active,Timestamp createdAt){
         this.sku=sku;
         this.name=name;
+        this.category
     }
 }
