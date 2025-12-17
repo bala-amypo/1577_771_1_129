@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import com.example.demo.model.Product;
 import com.example.demo.service.ProductService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/products")
@@ -23,6 +23,7 @@ public class ProductController {
     ProductService productService;
     @PostMapping
     public Product create(@Valid @RequestBody Product product){ 
+        System.out.println("in Controller "+product.getName());
         return productService.createProduct(product);
  
     }

@@ -16,7 +16,7 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     @Override
     public Product createProduct(Product product){
-        
+        System.out.println("In Impl "+product.getName());
         return productRepository.save(product);
     }
 //     @Override
