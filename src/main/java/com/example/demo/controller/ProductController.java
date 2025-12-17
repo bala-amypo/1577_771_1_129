@@ -1,4 +1,4 @@
-package com.example.E_commerce.controller;
+package com.example.demo.controller;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.E_commerce.model.Product;
-import com.example.E_commerce.service.ProductService;
+import com.example.demo.model.Product;
+import com.example.demo.service.ProductService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 

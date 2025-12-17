@@ -1,4 +1,4 @@
-package com.example.E_commerce.service.impl;
+package com.example.demo.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.E_commerce.model.Product;
-import com.example.E_commerce.repository.ProductRepository;
-import com.example.E_commerce.service.ProductService;
+import com.example.demo.model.Product;
+import com.example.demo.repository.ProductRepository;
+import com.example.demo.service.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired

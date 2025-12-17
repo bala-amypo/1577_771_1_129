@@ -1,4 +1,4 @@
-package com.example.E_commerce.model;
+package com.example.demo.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
