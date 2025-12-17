@@ -3,6 +3,7 @@ package com.example.demo.model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import jakarta.persistence.Entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
