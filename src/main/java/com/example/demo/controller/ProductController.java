@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.valid;
+import jakarta.validation.Valid;
 import com.example.demo.model.Product;
 import com.example.demo.service.ProductService;
 
