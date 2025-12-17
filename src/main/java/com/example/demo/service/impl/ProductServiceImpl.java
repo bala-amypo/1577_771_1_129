@@ -18,22 +18,22 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(Product product){
         return productRepository.save(product);
     }
-    @Override
-    public Product updateProduct(Long id,Product product){
-        Optional<Product> lis=productRepository.findById(id);
-        if(lis.isPresent()){
-            Product old=lis.get();
-            old.setSku(product.getSku());
-            old.setName(product.getName());
-            old.setCategory(product.getCategory());
-            old.setPrice(product.getPrice());
-            old.setActive(product.getActive());
-            old.setCreatedAt(product.getCreatedAt());
-            return productRepository.save(old);
+//     @Override
+//     public Product updateProduct(Long id,Product product){
+//         Optional<Product> lis=productRepository.findById(id);
+//         if(lis.isPresent()){
+//             Product old=lis.get();
+//             old.setSku(product.getSku());
+//             old.setName(product.getName());
+//             old.setCategory(product.getCategory());
+//             old.setPrice(product.getPrice());
+//             old.setActive(product.getActive());
+//             old.setCreatedAt(product.getCreatedAt());
+//             return productRepository.save(old);
 
-    }
-    return null;
-}
+//     }
+//     return null;
+// }
     @Override
     public Product getProductById(Long id){
        Optional<Product> lis = productRepository.findById(id);
@@ -44,12 +44,12 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllProducts(){
         return productRepository.findAll();
     }
-    @Override
-    public void deactiveProduct(Long id){
-        Product product=getProductById(id);
-        product.setActive(false);
-        productRepository.save(product);
-    }
+    // @Override
+    // public void deactiveProduct(Long id){
+    //     Product product=getProductById(id);
+    //     product.setActive(false);
+    //     productRepository.save(product);
+    // }
 
 
 
