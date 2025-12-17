@@ -16,11 +16,7 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
     @Override
     public Product createProduct(Product product){
-        if(productRepository.existBySku(product.getSku())){
-            throw new IllegalArgumentException("Duplicate SKU not allowed");
-        }
         return productRepository.save(product);
-
     }
     @Override
     public Product updateProduct(Long id,Product product){
