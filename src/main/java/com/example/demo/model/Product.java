@@ -3,13 +3,25 @@ package com.example.E_commerce.model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String sku;
     private String name;
     private String category;
+    @NotNull
+    @Positive(message = "Price must be greater than 0")
     private BigDecimal price;
     private Boolean active;
+    @GeneratedValue
     private Timestamp createdAt;
     public Product(){}
     public Product(String sku, String name, String category, BigDecimal price, Boolean active, Timestamp createdAt) {
