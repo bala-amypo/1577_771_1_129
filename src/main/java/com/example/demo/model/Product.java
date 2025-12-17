@@ -22,7 +22,6 @@ public class Product {
     @Positive(message = "Price must be greater than 0")
     private BigDecimal price;
     private Boolean active;
-    @GeneratedValue
     private Timestamp createdAt;
     public Product(){}
     public Product(String sku, String name, String category, BigDecimal price, Boolean active, Timestamp createdAt) {
