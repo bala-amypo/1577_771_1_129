@@ -40,7 +40,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
     @GetMapping
-    public List<Product> getll(@PathVariable Long id){
+    public List<Product> getll(){
         return productService.getAllProducts();
     }
     @PutMapping("/{id}/deactivate")
