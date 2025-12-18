@@ -1,43 +1,60 @@
-// package com.example.E_commerce.model;
+package com.example.demo.model;
 
-// import java.sql.Timestamp;
+import java.sql.Timestamp;
 
-// public class Cart {
-//     private Long id;
-//     private Long userId;
-//     private Timestamp createdAt;
-//     private Timestamp updatedAt;
-//     public Cart(){}
-//     public Cart(Long userId, Timestamp createdAt, Timestamp updatedAt) {
-//         this.userId = userId;
-//         this.createdAt = createdAt;
-//         this.updatedAt = updatedAt;
-//     }
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
-//     public void setUserId(Long userId) {
-//         this.userId = userId;
-//     }
-//     public void setCreatedAt(Timestamp createdAt) {
-//         this.createdAt = createdAt;
-//     }
-//     public void setUpdatedAt(Timestamp updatedAt) {
-//         this.updatedAt = updatedAt;
-//     }
-//     public Long getId() {
-//         return id;
-//     }
-//     public Long getUserId() {
-//         return userId;
-//     }
-//     public Timestamp getCreatedAt() {
-//         return createdAt;
-//     }
-//     public Timestamp getUpdatedAt() {
-//         return updatedAt;
-//     }
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+@Entity
+public class Cart {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long userId;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private Boolean active=true;
+    public Cart(){}
+    public Cart(Long userId, Timestamp createdAt, Timestamp updatedAt,Boolean active) {
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.active=active;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+    public Long getId() {
+        return id;
+    }
+    public Long getUserId() {
+        return userId;
+    }
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+    public Boolean getActive() {
+        return active;
+    }
+
     
 
     
-// }
+}
