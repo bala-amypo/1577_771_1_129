@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
-import com.exampledemo.dto.RegisterRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
-import com.example.E_commerce.repository.UserRepository;
-import com.example.E_commerce.service.AuthService;
+import com.example.demo.repository.UserRepository;
+import com.example.demo.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
