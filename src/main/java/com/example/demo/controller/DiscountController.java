@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.DiscountApplication;
-import com.example.demoservice.DiscountService;
+import com.example.demo.service.DiscountService;
 
 @RestController
 @RequestMapping("/api/discounts")
