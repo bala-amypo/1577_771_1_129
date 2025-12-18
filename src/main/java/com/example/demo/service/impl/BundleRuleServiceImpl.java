@@ -42,7 +42,7 @@ public class BundleRuleServiceImpl implements BundleRuleService {
     }
 
     @Override
-    public List<BundleRule> getActiveRules(Long id) {
+    public List<BundleRule> getActiveRules() {
         return bundleRuleRepository.findByActive(true);
     }
 
