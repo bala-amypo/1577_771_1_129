@@ -9,5 +9,5 @@ public interface BundleRuleService {
     BundleRule updateRule(Long id,BundleRule rule);
     BundleRule getRuleById(Long id);
     List<BundleRule> getActiveRules();
-    void deactivateRule(Long id);
+    BundleRule deactivateRule(Long id);
 }

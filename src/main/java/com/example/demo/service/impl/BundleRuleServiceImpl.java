@@ -52,7 +52,7 @@ public class BundleRuleServiceImpl implements BundleRuleService {
         if (optional.isPresent()) {
             BundleRule rule = optional.get();
             rule.setActive(false);
-            bundleRuleRepository.save(rule);
+            return bundleRuleRepository.save(rule);
         }
     }
 }
