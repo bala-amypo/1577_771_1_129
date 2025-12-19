@@ -1,6 +1,6 @@
 package com.example.demo.model;
 import java.util.*;
-import com.example.demo.model.DiscountApplication;
+// import com.example.demo.model.DiscountApplication;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
