@@ -18,7 +18,7 @@ public class BundleRule {
     private String requiredProductIds;
     private Double discountPercentage;
     private Boolean active=true;
-    @OneToMany(mappedby="bundleRule")
+    @OneToMany(mappedBy="bundleRule")
     public List<DiscountApplication> lis1=new ArrayList<>();
     public BundleRule(){}
     public BundleRule(String ruleName, String requiredProductIds, Double discountPercentage, Boolean active) {
