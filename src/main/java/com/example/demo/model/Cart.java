@@ -16,10 +16,14 @@ public class Cart {
     private Long id;
     private Long userId;
     private Timestamp createdAt;
+    @PrePersist
+    public void oncreate(){
+    this.createdAt=Timestamp.from(Instant.now());
+    }
     private Timestamp updatedAt;
     @PrePersist
     public void create(){
-    this.updatedAt=Timestamp.now();
+    this.updatedAt=Timestamp.from(Instant.now());
     }
     private Boolean active=true;
     // @OneToMany(mappedBy="cart")
