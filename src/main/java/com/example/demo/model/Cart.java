@@ -16,6 +16,9 @@ public class Cart {
     private Timestamp updatedAt;
     private Boolean active=true;
     @OneToMany(mappedby="cart")
+    public List<CartItem>=new ArrayList<>();
+    @OneToMany(mappedby="cart")
+    public List<DiscountApplication>=new ArrayList<>();
     public Cart(){}
     public Cart(Long userId, Timestamp createdAt, Timestamp updatedAt,Boolean active) {
         this.userId = userId;
