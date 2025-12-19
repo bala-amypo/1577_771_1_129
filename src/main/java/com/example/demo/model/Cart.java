@@ -3,6 +3,7 @@ import java.util.*;
 import com.example.demo.model.CartItem;
 import com.example.demo.model.BundleRule;
 import java.sql.Timestamp;
+import jakarta.persistence.OneToMany;
 
 import jakarta.persistence.*;
 import jakarta.persistence.GeneratedValue;
