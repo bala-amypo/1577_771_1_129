@@ -7,18 +7,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.ManyToOne;
 @Entity
 public class DiscountApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name="cart_id")
+    // @ManyToOne
+    // @JoinColumn(name="cart_id")
     private Cart cart;
-    @ManyToOne
-    @JoinColumn(name="bundle_rule_id")
+    // @ManyToOne
+    // @JoinColumn(name="bundle_rule_id")
     private BundleRule bundleRule;
     private BigDecimal discountAmount;
     private Timestamp appliedAt;
