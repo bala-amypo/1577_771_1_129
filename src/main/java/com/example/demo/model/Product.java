@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.*;
+import com.example.demo.model.CartItem;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
