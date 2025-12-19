@@ -17,9 +17,9 @@ public class Cart {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Boolean active=true;
-    @OneToMany(mappedby="cart")
+    @OneToMany(mappedBy="cart")
     public List<CartItem> lis1=new ArrayList<>();
-    @OneToMany(mappedby="cart")
+    @OneToMany(mappedBy="cart")
     public List<DiscountApplication>lis2=new ArrayList<>();
     public Cart(){}
     public Cart(Long userId, Timestamp createdAt, Timestamp updatedAt,Boolean active) {
