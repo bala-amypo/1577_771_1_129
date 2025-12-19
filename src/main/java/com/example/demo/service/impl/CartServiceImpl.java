@@ -17,10 +17,10 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart createCart(Long userId) {
-    Cart cart = 
+    Cart cart = cartRepository.findByUserId(userId).orElse(null);
     cart.setUserId(userId);
     return cartRepository.save(cart);
-}
+    }
 
 
     @Override
