@@ -39,7 +39,7 @@ public class BundleRuleController {
         return bundleRuleService.getRuleById(id);
     }
     @GetMapping("/active")
-    public List<BundleRule> getll(@PathVariable Long id){
+    public List<BundleRule> getll(){
         return bundleRuleService.getActiveRules();
     }
     @PutMapping("/{id}/deactivate")
