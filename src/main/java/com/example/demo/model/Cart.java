@@ -17,6 +17,10 @@ public class Cart {
     private Long userId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    @PrePersist
+    public void create(){
+    this.updatedAt=Timestamp.now();
+    }
     private Boolean active=true;
     // @OneToMany(mappedBy="cart")
     // public List<CartItem> lis1=new ArrayList<>();
