@@ -1,7 +1,7 @@
 package com.example.demo.model;
 import java.util.*;
 import com.example.demo.model.CartItem;
-import com.example/demo.model.BundleRule;
+import com.example.demo.model.BundleRule;
 import java.sql.Timestamp;
 
 import jakarta.persistence.*;
