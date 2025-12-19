@@ -54,5 +54,6 @@ public class BundleRuleServiceImpl implements BundleRuleService {
             rule.setActive(false);
             return bundleRuleRepository.save(rule);
         }
+        return null;
     }
 }
