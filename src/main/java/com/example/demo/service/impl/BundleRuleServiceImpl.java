@@ -47,7 +47,7 @@ public class BundleRuleServiceImpl implements BundleRuleService {
     }
 
     @Override
-    public void deactivateRule(Long id) {
+    public BundleRule deactivateRule(Long id) {
         Optional<BundleRule> optional = bundleRuleRepository.findById(id);
         if (optional.isPresent()) {
             BundleRule rule = optional.get();
