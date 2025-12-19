@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import com.example.demo.model.Cart;
+import com.example.demo.model.BundleRule;
+
 // import jakarta.persistence.JoinColumn;
 // import jakarta.persistence.ManyToOne;
 @Entity
@@ -19,7 +22,7 @@ public class DiscountApplication {
     private Cart cart;
     // @ManyToOne
     // @JoinColumn(name="bundle_rule_id")
-    // private BundleRule bundleRule;
+    private BundleRule bundleRule;
     private BigDecimal discountAmount;
     private Timestamp appliedAt;
     public DiscountApplication(){}
