@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import java.sql.Timestamp;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +15,7 @@ public class Cart {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Boolean active=true;
+    @OneToMany(mappedby="cart")
     public Cart(){}
     public Cart(Long userId, Timestamp createdAt, Timestamp updatedAt,Boolean active) {
         this.userId = userId;
