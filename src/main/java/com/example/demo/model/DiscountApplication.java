@@ -19,7 +19,7 @@ public class DiscountApplication {
     private Cart cart;
     // @ManyToOne
     // @JoinColumn(name="bundle_rule_id")
-    private BundleRule bundleRule;
+    // private BundleRule bundleRule;
     private BigDecimal discountAmount;
     private Timestamp appliedAt;
     public DiscountApplication(){}
