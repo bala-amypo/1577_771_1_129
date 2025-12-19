@@ -22,6 +22,8 @@ public class Product {
     private BigDecimal price;
     private Boolean active=true;
     private Timestamp createdAt;
+    @OneToMany(mappedby="product")
+    public List<Cart
     public Product(){}
     public Product(String sku, String name, String category, BigDecimal price, Boolean active, Timestamp createdAt) {
         this.sku = sku;
