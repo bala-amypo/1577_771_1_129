@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +16,7 @@ public class BundleRule {
     private String requiredProductIds;
     private Double discountPercentage;
     private Boolean active=true;
+    @OneToMany(mappedby="bundleRule")
     public BundleRule(){}
     public BundleRule(String ruleName, String requiredProductIds, Double discountPercentage, Boolean active) {
         this.ruleName = ruleName;
