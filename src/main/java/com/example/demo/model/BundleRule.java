@@ -1,6 +1,6 @@
 package com.example.demo.model;
 import java.util.*;
-// import com.example.demo.model.DiscountApplication;
+import com.example.demo.model.DiscountApplication;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.*;
@@ -18,8 +18,8 @@ public class BundleRule {
     private String requiredProductIds;
     private Double discountPercentage;
     private Boolean active=true;
-    // @OneToMany(mappedBy="bundleRule")
-    // public List<DiscountApplication> lis1=new ArrayList<>();
+    @OneToMany(mappedBy="bundleRule")
+    public List<DiscountApplication> lis1=new ArrayList<>();
     public BundleRule(){}
     public BundleRule(String ruleName, String requiredProductIds, Double discountPercentage, Boolean active) {
         this.ruleName = ruleName;
