@@ -23,7 +23,7 @@ public class Product {
     private Boolean active=true;
     private Timestamp createdAt;
     @OneToMany(mappedby="product")
-    public List<Cart
+    public List<CartItem> lis1=new ArrayList<>();
     public Product(){}
     public Product(String sku, String name, String category, BigDecimal price, Boolean active, Timestamp createdAt) {
         this.sku = sku;
