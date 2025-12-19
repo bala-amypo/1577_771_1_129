@@ -1,12 +1,12 @@
-// package com.example.demo.service;
+package com.example.demo.service;
 
-// import java.util.List;
+import java.util.List;
 
-// import com.example.demo.model.DiscountApplication;
+import com.example.demo.model.DiscountApplication;
 
-// public interface DiscountService {
-//     void evaluateDiscounts(Long cartId);
-//     DiscountApplication getApplicationById(Long id);
-//     List<DiscountApplication> getApplicationsForCart(Long cartId);
+public interface DiscountService {
+    void evaluateDiscounts(Long cartId);
+    DiscountApplication getApplicationById(Long id);
+    List<DiscountApplication> getApplicationsForCart(Long cartId);
     
-// }
+}
