@@ -37,6 +37,7 @@ public class Cart {
     protected void onUpdate() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
+    @OneToMany(mappedBy=""
 
     // getters and setters
     public Long getId() { return id; }
