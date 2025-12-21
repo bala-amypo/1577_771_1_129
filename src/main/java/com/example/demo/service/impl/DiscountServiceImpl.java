@@ -32,48 +32,39 @@ public class DiscountServiceImpl implements DiscountService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cartId);
-        if (cartItems.isEmpty()) {
-            return;
+        List<CartItem> items = cartItemRepository.findByCartId(cartId);
+        if (items.isEmpty()) return;
+
+        Set<Long> productIds = new HashSet<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (CartItem item : items) {
+            productIds.add(item.getProduct().getId());
+            total = total.add(
+                    item.getProduct().getPrice()
+                            .multiply(BigDecimal.valueOf(item.getQuantity()))
+            );
         }
 
-        Set<Long> productIdsInCart = new HashSet<>();
-        BigDecimal cartTotal = BigDecimal.ZERO;
+        for (BundleRule rule : bundleRuleRepository.findByActiveTrue()) {
 
-        for (CartItem item : cartItems) {
-            productIdsInCart.add(item.getProduct().getId());
-            BigDecimal itemTotal = item.getProduct()
-                    .getPrice()
-                    .multiply(BigDecimal.valueOf(item.getQuantity()));
-            cartTotal = cartTotal.add(itemTotal);
-        }
-
-        List<BundleRule> activeRules = bundleRuleRepository.findByActiveTrue();
-
-        for (BundleRule rule : activeRules) {
-
-            String[] requiredIds = rule.getRequiredProductIds().split(",");
             boolean eligible = true;
-
-            for (String idStr : requiredIds) {
-                Long pid = Long.parseLong(idStr.trim());
-                if (!productIdsInCart.contains(pid)) {
+            for (String pid : rule.getRequiredProductIds().split(",")) {
+                if (!productIds.contains(Long.parseLong(pid.trim()))) {
                     eligible = false;
                     break;
                 }
             }
 
             if (eligible) {
-                BigDecimal discount = cartTotal
-                        .multiply(BigDecimal.valueOf(rule.getDiscountPercentage()))
-                        .divide(BigDecimal.valueOf(100));
-
-                DiscountApplication application = new DiscountApplication();
-                application.setCart(cart);
-                application.setBundleRule(rule);
-                application.setDiscountAmount(discount);
-
-                discountApplicationRepository.save(application);
+                DiscountApplication app = new DiscountApplication();
+                app.setCart(cart);
+                app.setBundleRule(rule);
+                app.setDiscountAmount(
+                        total.multiply(BigDecimal.valueOf(rule.getDiscountPercentage()))
+                             .divide(BigDecimal.valueOf(100))
+                );
+                discountApplicationRepository.save(app);
             }
         }
     }
