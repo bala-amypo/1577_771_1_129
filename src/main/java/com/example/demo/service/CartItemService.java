@@ -1,12 +1,15 @@
-// package com.example.demo.service;
+package com.example.demo.service;
 
-// import java.util.List;
+import java.util.List;
+import com.example.demo.model.CartItem;
 
-// import com.example.demo.model.CartItem;
+public interface CartItemService {
 
-// public interface CartItemService {
-//     CartItem addItem(Long cartId,Long productId,Integer quantity);
-//     CartItem updateItem(Long id,Integer quantity);
-//     List<CartItem> getItemsForCart(Long cartId);
-//     void removeItem(Long id);
-// }
+    CartItem addItem(Long cartId, Long productId, Integer quantity);
+
+    CartItem updateItem(Long id, Integer quantity);
+
+    List<CartItem> getItemsForCart(Long cartId);
+
+    void removeItem(Long id);
+}
