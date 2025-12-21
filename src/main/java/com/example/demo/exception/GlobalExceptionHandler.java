@@ -10,9 +10,4 @@ public class GlobalExceptionHandler {
     public String handleIllegalArgument(IllegalArgumentException ex) {
         return ex.getMessage();
     }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public String handleNotFound(ResourceNotFoundException ex) {
-        return ex.getMessage();
-    }
 }

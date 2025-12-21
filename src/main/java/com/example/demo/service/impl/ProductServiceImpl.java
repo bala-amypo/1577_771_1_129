@@ -4,7 +4,6 @@ import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
 
-
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -33,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Product getProductById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new GlobalException("not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
     public List<Product> getAllProducts() {
