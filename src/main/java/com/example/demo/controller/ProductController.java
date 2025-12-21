@@ -1,53 +1,43 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.model.Product;
 import com.example.demo.service.ProductService;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    @Autowired
-    ProductService productService;
+
+    private final ProductService service;
+
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
+
     @PostMapping
-    public Product create(@Valid @RequestBody Product product){ 
-        return productService.createProduct(product);
- 
+    public Product create(@RequestBody Product product) {
+        return service.createProduct(product);
     }
+
     @PutMapping("/{id}")
-    public String putbyid(Long id,@Valid @RequestBody Product product){
-        if(productService.updateProduct(id,product) != null){
-            return "SuccessFul";
-        }
-        return "Not sucessfull";
+    public Product update(@PathVariable Long id, @RequestBody Product product) {
+        return service.updateProduct(id, product);
     }
+
     @GetMapping("/{id}")
-    public Product getbyid(@PathVariable Long id){
-        return productService.getProductById(id);
+    public Product get(@PathVariable Long id) {
+        return service.getProductById(id);
     }
+
     @GetMapping
-    public List<Product> getll(){
-        return productService.getAllProducts();
+    public List<Product> list() {
+        return service.getAllProducts();
     }
+
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<String> put(@PathVariable Long id){
-         productService.deactiveProduct(id);
-         return ResponseEntity.ok("Product deactivated");
+    public void deactivate(@PathVariable Long id) {
+        service.deactivateProduct(id);
     }
-
-
 }

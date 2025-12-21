@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.model.BundleRule;
 import com.example.demo.repository.BundleRuleRepository;
 import com.example.demo.service.BundleRuleService;
-import com.example.demo.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -15,12 +14,10 @@ public class BundleRuleServiceImpl implements BundleRuleService {
         this.repository = repository;
     }
 
-    @Override
     public BundleRule createRule(BundleRule rule) {
         return repository.save(rule);
     }
 
-    @Override
     public BundleRule updateRule(Long id, BundleRule rule) {
         BundleRule existing = getRuleById(id);
         existing.setRuleName(rule.getRuleName());
@@ -29,18 +26,15 @@ public class BundleRuleServiceImpl implements BundleRuleService {
         return repository.save(existing);
     }
 
-    @Override
     public BundleRule getRuleById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("not found"));
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
-    @Override
     public List<BundleRule> getActiveRules() {
         return repository.findByActiveTrue();
     }
 
-    @Override
     public void deactivateRule(Long id) {
         BundleRule rule = getRuleById(id);
         rule.setActive(false);

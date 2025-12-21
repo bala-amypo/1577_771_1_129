@@ -22,8 +22,7 @@ public class BundleRuleController {
     }
 
     @PutMapping("/{id}")
-    public BundleRule update(@PathVariable Long id,
-                             @RequestBody BundleRule rule) {
+    public BundleRule update(@PathVariable Long id, @RequestBody BundleRule rule) {
         return service.updateRule(id, rule);
     }
 
@@ -33,7 +32,7 @@ public class BundleRuleController {
     }
 
     @GetMapping("/active")
-    public List<BundleRule> activeRules() {
+    public List<BundleRule> active() {
         return service.getActiveRules();
     }
 

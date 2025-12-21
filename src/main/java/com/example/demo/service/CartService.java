@@ -9,4 +9,6 @@ public interface CartService {
     Cart getCartById(Long id);
 
     Cart getCartByUserId(Long userId);
+
+    void deactivateCart(Long id);
 }

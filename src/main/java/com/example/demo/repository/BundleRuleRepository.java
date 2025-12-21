@@ -1,10 +1,10 @@
 package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.model.BundleRule;
-import java.util.List;
+import com.example.demo.model.Cart;
 
-public interface BundleRuleRepository extends JpaRepository<BundleRule, Long> {
+import java.util.Optional;
 
-    List<BundleRule> findByActiveTrue();
+public interface CartRepository extends JpaRepository<Cart, Long> {
+    Optional<Cart> findByUserId(Long userId);
 }
