@@ -1,60 +1,48 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
 
-@Service
+
+import java.util.List;
+
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    ProductRepository productRepository;
+    private final ProductRepository repository;
 
-    @Override
+    public ProductServiceImpl(ProductRepository repository) {
+        this.repository = repository;
+    }
+
     public Product createProduct(Product product) {
-        return productRepository.save(product);
+        repository.findBySku(product.getSku())
+                .ifPresent(p -> {
+                    throw new IllegalArgumentException("SKU already exists");
+                });
+        return repository.save(product);
     }
 
-    @Override
     public Product updateProduct(Long id, Product product) {
-        Optional<Product> optional = productRepository.findById(id);
-
-        if (optional.isPresent()) {
-            Product old = optional.get();
-            old.setSku(product.getSku());
-            old.setName(product.getName());
-            old.setCategory(product.getCategory());
-            old.setPrice(product.getPrice());
-            old.setActive(product.getActive());
-            return productRepository.save(old);
-        }
-        return null;
+        Product existing = getProductById(id);
+        existing.setName(product.getName());
+        existing.setCategory(product.getCategory());
+        existing.setPrice(product.getPrice());
+        return repository.save(existing);
     }
 
-    @Override
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new GlobalException("not found"));
     }
 
-    @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return repository.findAll();
     }
-    
-    @Override
-    public void deactiveProduct(Long id) {
-        Optional<Product> optional = productRepository.findById(id);
 
-        if (optional.isPresent()) {
-            Product product = optional.get();
-            product.setActive(false);
-            productRepository.save(product);
-        }
+    public void deactivateProduct(Long id) {
+        Product p = getProductById(id);
+        p.setActive(false);
+        repository.save(p);
     }
 }
