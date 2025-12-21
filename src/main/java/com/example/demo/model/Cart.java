@@ -1,14 +1,7 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 
 @Entity
 public class Cart {
@@ -22,36 +15,47 @@ public class Cart {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    private Boolean active = true;
-
-    public Cart() {}
-
     @PrePersist
-    protected void onCreate() {
-        Timestamp now = Timestamp.from(Instant.now());
-        this.createdAt = now;
-        this.updatedAt = now;
+    void onCreate() {
+        createdAt = new Timestamp(System.currentTimeMillis());
     }
 
     @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = Timestamp.from(Instant.now());
+    void onUpdate() {
+        updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
+    /* ===== GETTERS & SETTERS ===== */
 
-    // getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public Timestamp getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
