@@ -1,55 +1,49 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Cart;
-import com.example.demo.model.CartItem;
-import com.example.demo.model.Product;
-import com.example.demo.repository.CartItemRepository;
 import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.ProductRepository;
-import com.example.demo.service.CartItemService;
+import com.example.demo.service.CartService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class CartItemServiceImpl implements CartItemService {
+public class CartServiceImpl implements CartService {
 
-    private final CartItemRepository cartItemRepository;
-    private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
+    private final CartRepository repository;
 
-    public CartItemServiceImpl(CartItemRepository cartItemRepository,
-                               CartRepository cartRepository,
-                               ProductRepository productRepository) {
-        this.cartItemRepository = cartItemRepository;
-        this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
+    public CartServiceImpl(CartRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public CartItem addItem(Long cartId, Long productId, Integer quantity) {
+    public Cart createCart(Long userId) {
 
-        Cart cart = cartRepository.findById(cartId)
+        repository.findByUserId(userId)
+                .filter(Cart::getActive)
+                .ifPresent(c -> {
+                    throw new IllegalArgumentException("Cart already exists");
+                });
+
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        return repository.save(cart);
+    }
+
+    @Override
+    public Cart getCartById(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
+    }
 
-        Product product = productRepository.findById(productId)
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return repository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
-
-        CartItem item = new CartItem();
-        item.setCart(cart);
-        item.setProduct(product);
-        item.setQuantity(quantity);
-
-        return cartItemRepository.save(item);
     }
 
     @Override
-    public List<CartItem> getItemsForCart(Long cartId) {
-        return cartItemRepository.findByCartId(cartId);
-    }
-
-    @Override
-    public void removeItem(Long id) {
-        cartItemRepository.deleteById(id);
+    public void deactivateCart(Long id) {
+        Cart cart = getCartById(id);
+        cart.setActive(false);
+        repository.save(cart);
     }
 }
