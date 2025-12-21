@@ -12,7 +12,6 @@ public class DiscountController {
 
     private final DiscountService discountService;
 
-    // ✅ CONSTRUCTOR INJECTION ONLY
     public DiscountController(DiscountService discountService) {
         this.discountService = discountService;
     }
