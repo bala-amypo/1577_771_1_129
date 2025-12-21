@@ -1,13 +1,10 @@
 package com.example.demo.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.model.BundleRule;
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface BundleRuleRepository extends JpaRepository<BundleRule, Long> {
 
-import com.example.demo.model.BundleRule;
-
-public interface BundleRuleRepository extends JpaRepository<BundleRule,Long>{
-
-    List<BundleRule> findByActive(boolean b);
-    
+    List<BundleRule> findByActiveTrue();
 }
