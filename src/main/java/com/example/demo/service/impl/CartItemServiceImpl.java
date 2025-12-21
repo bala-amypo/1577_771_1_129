@@ -44,6 +44,16 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    public CartItem updateItem(Long id, Integer quantity) {
+
+        CartItem item = cartItemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+
+        item.setQuantity(quantity);
+        return cartItemRepository.save(item);
+    }
+
+    @Override
     public List<CartItem> getItemsForCart(Long cartId) {
         return cartItemRepository.findByCartId(cartId);
     }
