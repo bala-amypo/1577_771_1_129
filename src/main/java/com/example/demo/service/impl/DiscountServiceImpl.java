@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Service   // ⭐ REQUIRED
+@Service
 public class DiscountServiceImpl implements DiscountService {
 
     private final BundleRuleRepository bundleRuleRepository;
@@ -79,6 +79,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public List<DiscountApplication> getApplicationsForCart(Long cartId) {
-        return discountApplicationRepository.findByCartId(cartId);
+      
+        return discountApplicationRepository.findByCart_Id(cartId);
     }
 }
