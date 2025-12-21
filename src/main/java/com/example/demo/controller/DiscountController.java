@@ -1,24 +1,25 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.model.DiscountApplication;
 import com.example.demo.service.DiscountService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/discounts")
 public class DiscountController {
 
-    @Autowired
-    DiscountService discountService;
+    private final DiscountService discountService;
+
+    // ✅ CONSTRUCTOR INJECTION ONLY
+    public DiscountController(DiscountService discountService) {
+        this.discountService = discountService;
+    }
 
     @PostMapping("/evaluate/{cartId}")
-    public String evaluate(@PathVariable Long cartId) {
+    public void evaluate(@PathVariable Long cartId) {
         discountService.evaluateDiscounts(cartId);
-        return "Discount evaluated";
     }
 
     @GetMapping("/{id}")
