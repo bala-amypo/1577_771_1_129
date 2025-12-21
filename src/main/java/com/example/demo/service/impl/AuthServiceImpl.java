@@ -1,34 +1,38 @@
 package com.example.demo.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 
-@Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository repository;
 
-    @Override
-    public AuthResponse register(RegisterRequest request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setRole("USER");
-        userRepository.save(user);
-
-        return new AuthResponse("User registered successfully");
+    public AuthServiceImpl(UserRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public AuthResponse login(AuthRequest request) {
-        return new AuthResponse("Login successful");
+    public User register(User user) {
+
+        repository.findByEmail(user.getEmail())
+                .ifPresent(u -> {
+                    throw new IllegalArgumentException("Email already exists");
+                });
+
+        return repository.save(user);
+    }
+
+    @Override
+    public User login(User user) {
+
+        User existing = repository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+
+        if (!existing.getPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+
+        return existing;
     }
 }
