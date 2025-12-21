@@ -1,59 +1,49 @@
 package com.example.demo.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.demo.model.BundleRule;
 import com.example.demo.repository.BundleRuleRepository;
 import com.example.demo.service.BundleRuleService;
+import com.example.demo.exception.ResourceNotFoundException;
 
-@Service
+import java.util.List;
+
 public class BundleRuleServiceImpl implements BundleRuleService {
 
-    @Autowired
-    BundleRuleRepository bundleRuleRepository;
+    private final BundleRuleRepository repository;
+
+    public BundleRuleServiceImpl(BundleRuleRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public BundleRule createRule(BundleRule rule) {
-        return bundleRuleRepository.save(rule);
+        return repository.save(rule);
     }
 
     @Override
     public BundleRule updateRule(Long id, BundleRule rule) {
-        Optional<BundleRule> optional = bundleRuleRepository.findById(id);
-
-        if (optional.isPresent()) {
-            BundleRule old = optional.get();
-            old.setRuleName(rule.getRuleName());
-            old.setRequiredProductIds(rule.getRequiredProductIds());
-            old.setDiscountPercentage(rule.getDiscountPercentage());
-            old.setActive(rule.getActive());
-            return bundleRuleRepository.save(old);
-        }
-        return null;
+        BundleRule existing = getRuleById(id);
+        existing.setRuleName(rule.getRuleName());
+        existing.setRequiredProductIds(rule.getRequiredProductIds());
+        existing.setDiscountPercentage(rule.getDiscountPercentage());
+        return repository.save(existing);
     }
 
     @Override
     public BundleRule getRuleById(Long id) {
-        return bundleRuleRepository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("not found"));
     }
 
     @Override
     public List<BundleRule> getActiveRules() {
-        return bundleRuleRepository.findByActive(true);
+        return repository.findByActiveTrue();
     }
 
     @Override
-    public BundleRule deactivateRule(Long id) {
-        Optional<BundleRule> optional = bundleRuleRepository.findById(id);
-        if (optional.isPresent()) {
-            BundleRule rule = optional.get();
-            rule.setActive(false);
-            return bundleRuleRepository.save(rule);
-        }
-        return null;
+    public void deactivateRule(Long id) {
+        BundleRule rule = getRuleById(id);
+        rule.setActive(false);
+        repository.save(rule);
     }
 }

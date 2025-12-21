@@ -1,54 +1,44 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.model.BundleRule;
 import com.example.demo.service.BundleRuleService;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/bundle-rules")
 public class BundleRuleController {
-    @Autowired
-    BundleRuleService bundleRuleService;
+
+    private final BundleRuleService service;
+
+    public BundleRuleController(BundleRuleService service) {
+        this.service = service;
+    }
+
     @PostMapping
-    public BundleRule create(@Valid @RequestBody BundleRule rule){ 
-        return bundleRuleService.createRule(rule);
- 
+    public BundleRule create(@RequestBody BundleRule rule) {
+        return service.createRule(rule);
     }
+
     @PutMapping("/{id}")
-    public String putbyid(Long id,@Valid @RequestBody BundleRule rule){
-        if(bundleRuleService.updateRule(id,rule) != null){
-            return "SuccessFul";
-        }
-        return "Not sucessfull";
+    public BundleRule update(@PathVariable Long id,
+                             @RequestBody BundleRule rule) {
+        return service.updateRule(id, rule);
     }
+
     @GetMapping("/{id}")
-    public BundleRule getbyid(@PathVariable Long id){
-        return bundleRuleService.getRuleById(id);
+    public BundleRule get(@PathVariable Long id) {
+        return service.getRuleById(id);
     }
+
     @GetMapping("/active")
-    public List<BundleRule> getll(){
-        return bundleRuleService.getActiveRules();
+    public List<BundleRule> activeRules() {
+        return service.getActiveRules();
     }
+
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<String> put(@PathVariable Long id){
-         bundleRuleService.deactivateRule(id);
-         return ResponseEntity.ok("Product deactivated");
+    public void deactivate(@PathVariable Long id) {
+        service.deactivateRule(id);
     }
-
-
 }
-
-
