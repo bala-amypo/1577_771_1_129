@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
 
 @Entity
 public class Cart {
@@ -11,23 +10,7 @@ public class Cart {
     private Long id;
 
     private Long userId;
-
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
-
     private Boolean active = true;
-
-    @PrePersist
-    void onCreate() {
-        createdAt = new Timestamp(System.currentTimeMillis());
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        updatedAt = new Timestamp(System.currentTimeMillis());
-    }
-
-    /* ===== GETTERS & SETTERS ===== */
 
     public Long getId() {
         return id;
@@ -39,14 +22,6 @@ public class Cart {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
     }
 
     public Boolean getActive() {
