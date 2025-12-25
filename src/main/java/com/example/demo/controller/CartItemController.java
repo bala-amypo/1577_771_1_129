@@ -13,15 +13,18 @@ import com.example.demo.service.CartItemService;
 public class CartItemController {
 
     @Autowired
-    CartItemService cartItemService;
+    private CartItemService cartItemService;
 
     @PostMapping
-    public CartItem add(@RequestParam Long cartId,@RequestParam Long productId,@RequestParam Integer quantity) {
+    public CartItem add(@RequestParam Long cartId,
+                        @RequestParam Long productId,
+                        @RequestParam Integer quantity) {
         return cartItemService.addItem(cartId, productId, quantity);
     }
 
     @PutMapping("/{id}")
-    public String update(@PathVariable Long id, Integer quantity) {
+    public String update(@PathVariable Long id,
+                         @RequestParam Integer quantity) {
         if (cartItemService.updateItem(id, quantity) != null) {
             return "Successful";
         }

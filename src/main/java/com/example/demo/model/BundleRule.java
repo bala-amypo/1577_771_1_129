@@ -19,15 +19,6 @@ public class BundleRule {
 
     private Boolean active = true;
 
-    @PrePersist
-    @PreUpdate
-    void validate() {
-        if (discountPercentage == null ||
-            discountPercentage < 0 || discountPercentage > 100) {
-            throw new IllegalArgumentException("Invalid discount");
-        }
-    }
-
     /* ===== GETTERS & SETTERS ===== */
 
     public Long getId() {

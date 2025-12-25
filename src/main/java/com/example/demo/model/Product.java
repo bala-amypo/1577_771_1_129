@@ -2,30 +2,30 @@ package com.example.demo.model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.*;
-// import com.example.demo.model.CartItem;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Positive;
+
+import jakarta.persistence.*;
+
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false ,unique = true)
+
+    @Column(nullable = false, unique = true)
     private String sku;
+
     private String name;
     private String category;
-    @Positive(message="Price must be greater than o")
+
     private BigDecimal price;
-    private Boolean active=true;
+
+    private Boolean active = true;
+
     private Timestamp createdAt;
-    // @OneToMany(mappedBy="product")
-    // public List<CartItem> lis1=new ArrayList<>();
+
+    
+
     public Product(){}
     public Product(String sku, String name, String category, BigDecimal price, Boolean active, Timestamp createdAt) {
         this.sku = sku;
@@ -81,3 +81,4 @@ public class Product {
     
     
 }
+

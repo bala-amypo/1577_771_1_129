@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Cart {
@@ -10,7 +13,11 @@ public class Cart {
     private Long id;
 
     private Long userId;
+
     private Boolean active = true;
+
+    public Cart() {
+    }
 
     public Long getId() {
         return id;
