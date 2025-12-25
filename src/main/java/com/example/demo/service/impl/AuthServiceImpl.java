@@ -5,7 +5,7 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 import org.springframework.stereotype.Service;
 
-@Service   // ⭐ THIS IS THE FIX
+@Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository repository;

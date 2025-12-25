@@ -1,7 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.BundleRule;
+import com.example.demo.model.Cart;
+import com.example.demo.model.CartItem;
+import com.example.demo.model.DiscountApplication;
+import com.example.demo.repository.BundleRuleRepository;
+import com.example.demo.repository.CartItemRepository;
+import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.DiscountApplicationRepository;
 import com.example.demo.service.DiscountService;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +85,6 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public List<DiscountApplication> getApplicationsForCart(Long cartId) {
-      
         return discountApplicationRepository.findByCart_Id(cartId);
     }
 }

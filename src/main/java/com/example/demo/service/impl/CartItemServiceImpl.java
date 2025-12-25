@@ -1,5 +1,9 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
 import com.example.demo.model.Product;
@@ -7,9 +11,6 @@ import com.example.demo.repository.CartItemRepository;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.CartItemService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CartItemServiceImpl implements CartItemService {
