@@ -1,20 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.BundleRule;
-import com.example.demo.model.Cart;
-import com.example.demo.model.CartItem;
-import com.example.demo.model.DiscountApplication;
-import com.example.demo.repository.BundleRuleRepository;
-import com.example.demo.repository.CartItemRepository;
-import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.DiscountApplicationRepository;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.DiscountService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -35,13 +28,17 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public void evaluateDiscounts(Long cartId) {
+    public List<DiscountApplication> evaluateDiscounts(Long cartId) {
 
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
+        if (!cart.getActive()) return Collections.emptyList();
+
+        discountApplicationRepository.deleteByCartId(cartId);
+
         List<CartItem> items = cartItemRepository.findByCartId(cartId);
-        if (items.isEmpty()) return;
+        if (items.isEmpty()) return Collections.emptyList();
 
         Set<Long> productIds = new HashSet<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -53,6 +50,8 @@ public class DiscountServiceImpl implements DiscountService {
                             .multiply(BigDecimal.valueOf(item.getQuantity()))
             );
         }
+
+        List<DiscountApplication> applied = new ArrayList<>();
 
         for (BundleRule rule : bundleRuleRepository.findByActiveTrue()) {
 
@@ -70,21 +69,13 @@ public class DiscountServiceImpl implements DiscountService {
                 app.setBundleRule(rule);
                 app.setDiscountAmount(
                         total.multiply(BigDecimal.valueOf(rule.getDiscountPercentage()))
-                             .divide(BigDecimal.valueOf(100))
+                                .divide(BigDecimal.valueOf(100))
                 );
-                discountApplicationRepository.save(app);
+                app.setAppliedAt(LocalDateTime.now());
+                applied.add(discountApplicationRepository.save(app));
             }
         }
-    }
 
-    @Override
-    public DiscountApplication getApplicationById(Long id) {
-        return discountApplicationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
-    }
-
-    @Override
-    public List<DiscountApplication> getApplicationsForCart(Long cartId) {
-        return discountApplicationRepository.findByCart_Id(cartId);
+        return applied;
     }
 }

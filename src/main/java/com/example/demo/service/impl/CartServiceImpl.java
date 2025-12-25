@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.model.Cart;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.service.CartService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,8 +18,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart createCart(Long userId) {
 
-        repository.findByUserId(userId)
-                .filter(Cart::getActive)
+        repository.findByUserIdAndActiveTrue(userId)
                 .ifPresent(c -> {
                     throw new IllegalArgumentException("Cart already exists");
                 });
@@ -28,15 +28,14 @@ public class CartServiceImpl implements CartService {
         return repository.save(cart);
     }
 
-    @Override
-    public Cart getCartById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
+    public Cart getActiveCartForUser(Long userId) {
+        return repository.findByUserIdAndActiveTrue(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Active cart not found"));
     }
 
     @Override
-    public Cart getCartByUserId(Long userId) {
-        return repository.findByUserId(userId)
+    public Cart getCartById(Long id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 

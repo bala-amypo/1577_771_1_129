@@ -8,5 +8,7 @@ import java.util.List;
 public interface DiscountApplicationRepository
         extends JpaRepository<DiscountApplication, Long> {
 
-    List<DiscountApplication> findByCart_Id(Long cartId);
+    void deleteByCartId(Long cartId);
+
+    List<DiscountApplication> findByCartId(Long cartId);
 }

@@ -11,21 +11,15 @@ public class BundleRule {
     private Long id;
 
     private String ruleName;
-
-    // CSV of product IDs like "1,2,3"
     private String requiredProductIds;
-
     private Double discountPercentage;
-
     private Boolean active = true;
-
-    /* ===== GETTERS & SETTERS ===== */
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) {   // REQUIRED
         this.id = id;
     }
 

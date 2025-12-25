@@ -1,12 +1,6 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 
 @Entity
 public class CartItem {
@@ -23,16 +17,12 @@ public class CartItem {
 
     private Integer quantity;
 
-    @PrePersist
-    @PreUpdate
-    void validate() {
-        if (quantity == null || quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {   // REQUIRED
+        this.id = id;
     }
 
     public Cart getCart() {
@@ -56,6 +46,9 @@ public class CartItem {
     }
 
     public void setQuantity(Integer quantity) {
+        if (quantity == null || quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
         this.quantity = quantity;
     }
 }
