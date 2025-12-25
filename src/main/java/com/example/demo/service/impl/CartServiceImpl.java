@@ -17,7 +17,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart createCart(Long userId) {
-
         repository.findByUserIdAndActiveTrue(userId)
                 .ifPresent(c -> {
                     throw new IllegalArgumentException("Cart already exists");
@@ -28,15 +27,16 @@ public class CartServiceImpl implements CartService {
         return repository.save(cart);
     }
 
-    public Cart getActiveCartForUser(Long userId) {
-        return repository.findByUserIdAndActiveTrue(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Active cart not found"));
-    }
-
     @Override
     public Cart getCartById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
+    }
+
+    @Override
+    public Cart getActiveCartForUser(Long userId) {
+        return repository.findByUserIdAndActiveTrue(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Active cart not found"));
     }
 
     @Override

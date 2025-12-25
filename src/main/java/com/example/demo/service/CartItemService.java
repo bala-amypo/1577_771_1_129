@@ -1,12 +1,11 @@
 package com.example.demo.service;
 
-import java.util.List;
-
 import com.example.demo.model.CartItem;
+import java.util.List;
 
 public interface CartItemService {
 
-    CartItem addItem(Long cartId, Long productId, Integer quantity);
+    CartItem addItemToCart(CartItem item);
 
     CartItem updateItem(Long id, Integer quantity);
 

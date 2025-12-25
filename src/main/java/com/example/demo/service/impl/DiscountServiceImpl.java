@@ -75,7 +75,17 @@ public class DiscountServiceImpl implements DiscountService {
                 applied.add(discountApplicationRepository.save(app));
             }
         }
-
         return applied;
+    }
+
+    @Override
+    public DiscountApplication getApplicationById(Long id) {
+        return discountApplicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
+    }
+
+    @Override
+    public List<DiscountApplication> getApplicationsForCart(Long cartId) {
+        return discountApplicationRepository.findByCartId(cartId);
     }
 }
