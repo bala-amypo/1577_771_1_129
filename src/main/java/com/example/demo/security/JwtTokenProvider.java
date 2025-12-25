@@ -5,7 +5,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenProvider {
 
+    // Existing method (keep it)
     public String generateToken(Long userId) {
+        return "test-token-" + userId;
+    }
+
+    // 🔴 REQUIRED BY TESTS (ADD THIS)
+    public String generateToken(String email, String role, Long userId) {
         return "test-token-" + userId;
     }
 
