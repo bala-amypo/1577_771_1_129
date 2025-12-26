@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
-@SecurityRequirement(name="bearerAuth")
+// @SecurityRequirement(name="bearerAuth")
 
 public class CartItemController {
 
