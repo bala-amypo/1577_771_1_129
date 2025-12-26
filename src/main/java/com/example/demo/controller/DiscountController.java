@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DiscountApplication;
 import com.example.demo.service.DiscountService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,19 +16,22 @@ public class DiscountController {
         this.discountService = discountService;
     }
 
-    @PostMapping("/evaluate/{cartId}")
-    public ResponseEntity<String> evaluate(@PathVariable Long cartId) {
-        discountService.evaluateDiscounts(cartId);
-        return ResponseEntity.ok("Discounts evaluated successfully");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<DiscountApplication> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(discountService.getApplicationById(id));
-    }
-
+    // ✅ Force evaluation before returning
     @GetMapping("/cart/{cartId}")
-    public ResponseEntity<List<DiscountApplication>> getByCart(@PathVariable Long cartId) {
-        return ResponseEntity.ok(discountService.getApplicationsForCart(cartId));
+    public List<DiscountApplication> getByCart(@PathVariable Long cartId) {
+        discountService.evaluateDiscounts(cartId);
+        return discountService.getApplicationsForCart(cartId);
+    }
+
+    // ✅ Works after evaluation
+    @GetMapping("/{id}")
+    public DiscountApplication getById(@PathVariable Long id) {
+        return discountService.getApplicationById(id);
+    }
+
+    // Optional manual trigger (keep it)
+    @PostMapping("/evaluate/{cartId}")
+    public void evaluate(@PathVariable Long cartId) {
+        discountService.evaluateDiscounts(cartId);
     }
 }
