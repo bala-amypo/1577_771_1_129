@@ -19,12 +19,71 @@ public class User {
 
     private String role;
 
-    // 🔹 RESPONSE ONLY — Swagger will NOT ask input
+    /**
+     * Token is auto-generated and returned in response only.
+     * Swagger will NOT ask this as input.
+     */
     @Transient
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String token;
 
-    public User() {}
+    // ================= CONSTRUCTORS =================
 
-    // getters & setters (same as before)
+    // No-args constructor (required by JPA)
+    public User() {
+    }
+
+    // All-args constructor (without token)
+    public User(Long id, String email, String password, String role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    // ================= GETTERS & SETTERS =================
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // Password (input only)
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // Role (optional)
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // ================= TOKEN =================
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
