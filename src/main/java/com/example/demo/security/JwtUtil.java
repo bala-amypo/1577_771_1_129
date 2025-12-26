@@ -15,32 +15,39 @@ public class JwtUtil {
     private String secret;
 
     @Value("${jwt.expiration}")
-    private long expiration; // in milliseconds
+    private long expiration;
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    // ------------------ Generate Token ------------------
+    // Now accepts email, role, and userId (Long)
     public String generateToken(String email, String role, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
-                .claim("userId", userId)
+                .claim("userId", String.valueOf(userId)) // Convert Long → String
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    // ------------------ Validate Token ------------------
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
+    // ------------------ Extract Email ------------------
     public String getEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
@@ -50,6 +57,7 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    // ------------------ Extract Role ------------------
     public String getRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
@@ -59,12 +67,13 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
-    public Long getUserId(String token) {
+    // ------------------ Extract UserId ------------------
+    public String getUserId(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userId", Long.class);
+                .get("userId", String.class);
     }
 }
