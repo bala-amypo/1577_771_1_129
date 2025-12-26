@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DiscountApplication;
 import com.example.demo.service.DiscountService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,18 @@ public class DiscountController {
     }
 
     @PostMapping("/evaluate/{cartId}")
-    public void evaluate(@PathVariable Long cartId) {
+    public ResponseEntity<String> evaluate(@PathVariable Long cartId) {
         discountService.evaluateDiscounts(cartId);
+        return ResponseEntity.ok("Discounts evaluated successfully");
     }
 
     @GetMapping("/{id}")
-    public DiscountApplication getById(@PathVariable Long id) {
-        return discountService.getApplicationById(id);
+    public ResponseEntity<DiscountApplication> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(discountService.getApplicationById(id));
     }
 
     @GetMapping("/cart/{cartId}")
-    public List<DiscountApplication> getByCart(@PathVariable Long cartId) {
-        return discountService.getApplicationsForCart(cartId);
+    public ResponseEntity<List<DiscountApplication>> getByCart(@PathVariable Long cartId) {
+        return ResponseEntity.ok(discountService.getApplicationsForCart(cartId));
     }
 }
