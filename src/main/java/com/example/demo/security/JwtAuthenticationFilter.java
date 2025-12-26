@@ -20,15 +20,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ EXCLUDE SWAGGER + AUTH
+    /**
+     * ✅ VERY IMPORTANT
+     * This method tells Spring Security
+     * NOT to apply JWT filter for Swagger & Auth endpoints
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+
         String path = request.getServletPath();
 
         return path.startsWith("/auth/")
                 || path.startsWith("/swagger-ui/")
                 || path.startsWith("/v3/api-docs")
-                || path.equals("/swagger-ui.html");
+                || path.equals("/swagger-ui.html")
+                || path.equals("/swagger-ui/index.html");
     }
 
     @Override
@@ -40,20 +46,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
+
             String token = header.substring(7);
 
             if (jwtUtil.validateToken(token)) {
+
                 String email = jwtUtil.getEmail(token);
                 String role = jwtUtil.getRole(token);
 
-                UsernamePasswordAuthenticationToken auth =
+                UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 email,
                                 null,
                                 List.of(new SimpleGrantedAuthority("ROLE_" + role))
                         );
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authentication);
             }
         }
 
