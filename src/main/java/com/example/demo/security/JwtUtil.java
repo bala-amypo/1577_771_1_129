@@ -1,50 +1,63 @@
 package com.example.demo.security;
 
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.security.Key;
+import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    private static final long EXPIRY_TIME = 60 * 60 * 1000; // 1 hour
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private final Map<String, TokenData> tokenStore = new HashMap<>();
+    @Value("${jwt.expiration}")
+    private long expiration;
 
-    // ✅ AUTO-GENERATE TOKEN
-    public String generateToken(Long userId, String email) {
-        String token = UUID.randomUUID().toString();
-        tokenStore.put(token,
-                new TokenData(userId, email,
-                        System.currentTimeMillis() + EXPIRY_TIME));
-        return token;
+    private Key getKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    public String generateToken(String email, String role) {
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean validateToken(String token) {
-        TokenData data = tokenStore.get(token);
-        return data != null && System.currentTimeMillis() < data.expiry;
-    }
-
-    public Long getUserId(String token) {
-        return tokenStore.get(token).userId;
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String getEmail(String token) {
-        return tokenStore.get(token).email;
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    // ----- Inner class -----
-    private static class TokenData {
-        Long userId;
-        String email;
-        long expiry;
-
-        TokenData(Long userId, String email, long expiry) {
-            this.userId = userId;
-            this.email = email;
-            this.expiry = expiry;
-        }
+    public String getRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 }
