@@ -1,26 +1,59 @@
-// package com.example.demo.security;
+package com.example.demo.security;
 
-// import org.springframework.stereotype.Component;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-// @Component
-// public class JwtTokenProvider {
+/**
+ * Simple JWT-like token provider (no external libraries).
+ */
+public class JwtTokenProvider {
 
-//     // Existing method (keep it)
-//     public String generateToken(Long userId) {
-//         return "test-token-" + userId;
-//     }
+    private final String secret;
+    private final long validity; // milliseconds
 
-//     // 🔴 REQUIRED BY TESTS (ADD THIS)
-//     public String generateToken(String email, String role, Long userId) {
-//         return "test-token-" + userId;
-//     }
+    // In-memory token store
+    private final Map<String, Map<String, Object>> tokenStore = new HashMap<>();
 
-//     public Long getUserIdFromToken(String token) {
-//         if (token == null) return null;
-//         return Long.parseLong(token.replace("test-token-", ""));
-//     }
+    // ✅ REQUIRED constructor
+    public JwtTokenProvider(String secret, long validity) {
+        this.secret = secret;
+        this.validity = validity;
+    }
 
-//     public boolean validateToken(String token) {
-//         return token != null && token.startsWith("test-token-");
-//     }
-// }
+    // ✅ GENERATE TOKEN
+    public String generateToken(String email, String role, Long userId) {
+
+        String token = UUID.randomUUID().toString();
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("role", role);
+        claims.put("userId", userId);
+        claims.put("expiry", System.currentTimeMillis() + validity);
+
+        tokenStore.put(token, claims);
+        return token;
+    }
+
+    // ✅ VALIDATE TOKEN
+    public boolean validateToken(String token) {
+        if (!tokenStore.containsKey(token)) {
+            return false;
+        }
+        long expiry = (long) tokenStore.get(token).get("expiry");
+        return System.currentTimeMillis() < expiry;
+    }
+
+    public String getEmail(String token) {
+        return (String) tokenStore.get(token).get("email");
+    }
+
+    public String getRole(String token) {
+        return (String) tokenStore.get(token).get("role");
+    }
+
+    public Long getUserId(String token) {
+        return (Long) tokenStore.get(token).get("userId");
+    }
+}
