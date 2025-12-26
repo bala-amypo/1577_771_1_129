@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bundle-rules")
-// @SecurityRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 public class BundleRuleController {
 
     private final BundleRuleService service;

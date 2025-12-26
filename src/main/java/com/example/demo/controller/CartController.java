@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/carts")
-// @SecurityRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 
 public class CartController {
 

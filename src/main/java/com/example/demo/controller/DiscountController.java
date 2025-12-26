@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/discounts")
-// @SecurityRequirement(name = "bearerAuth")
+@SecurityRequirement(name = "bearerAuth")
 public class DiscountController {
 
     private final DiscountService discountService;

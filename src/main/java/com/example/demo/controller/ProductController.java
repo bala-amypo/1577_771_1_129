@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-// @SecurityRequirement(name="bearerAuth")
+@SecurityRequirement(name="bearerAuth")
 
 public class ProductController {
 
