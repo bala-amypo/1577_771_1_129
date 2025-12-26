@@ -2,16 +2,15 @@ package com.example.demo.controller;
 
 import com.example.demo.model.DiscountApplication;
 import com.example.demo.service.DiscountService;
-import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/discounts")
-@SecurityRequirement(name="bearerAuth")
-
+@SecurityRequirement(name = "bearerAuth")
 public class DiscountController {
 
     private final DiscountService discountService;
@@ -20,20 +19,19 @@ public class DiscountController {
         this.discountService = discountService;
     }
 
-    // ✅ Force evaluation before returning
+    // ✅ Always evaluates + returns discounts
     @GetMapping("/cart/{cartId}")
     public List<DiscountApplication> getByCart(@PathVariable Long cartId) {
-        discountService.evaluateDiscounts(cartId);
-        return discountService.getApplicationsForCart(cartId);
+        return discountService.evaluateDiscounts(cartId);
     }
 
-    // ✅ Works after evaluation
+    // ✅ Works ONLY after evaluation
     @GetMapping("/{id}")
     public DiscountApplication getById(@PathVariable Long id) {
         return discountService.getApplicationById(id);
     }
 
-    // Optional manual trigger (keep it)
+    // Optional manual trigger
     @PostMapping("/evaluate/{cartId}")
     public void evaluate(@PathVariable Long cartId) {
         discountService.evaluateDiscounts(cartId);
