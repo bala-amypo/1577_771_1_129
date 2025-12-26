@@ -31,21 +31,17 @@ public class AuthServiceImpl implements AuthService {
                     throw new IllegalArgumentException("Email already exists");
                 });
 
-        // Ensure role exists
-        if (user.getRole() == null || user.getRole().isBlank()) {
-            user.setRole("USER");
-        }
-
         // Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        // Save user
         User savedUser = userRepository.save(user);
 
-        // Generate token
-        String token = jwtUtil.generateToken(
+        // ✅ CORRECT TOKEN GENERATION
+        String token = jwtUtil.createToken(
+                savedUser.getId(),
                 savedUser.getEmail(),
-                savedUser.getRole(),
-                savedUser.getId()
+                savedUser.getRole()
         );
 
         savedUser.setToken(token);
@@ -63,10 +59,11 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid password");
         }
 
-        String token = jwtUtil.generateToken(
+        // ✅ CORRECT TOKEN GENERATION
+        String token = jwtUtil.createToken(
+                existingUser.getId(),
                 existingUser.getEmail(),
-                existingUser.getRole(),
-                existingUser.getId()
+                existingUser.getRole()
         );
 
         existingUser.setToken(token);
