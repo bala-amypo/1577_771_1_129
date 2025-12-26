@@ -4,11 +4,12 @@ import com.example.demo.model.BundleRule;
 import com.example.demo.service.BundleRuleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import io.
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/bundle-rules")
+@SecurityRequirement(name="bearerAuth")
 public class BundleRuleController {
 
     private final BundleRuleService service;
