@@ -2,39 +2,60 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(UserRepository repository) {
-        this.repository = repository;
+    public AuthServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
     }
 
+    // ================= REGISTER =================
     @Override
     public User register(User user) {
 
-        repository.findByEmail(user.getEmail())
+        // check existing user
+        userRepository.findByEmail(user.getEmail())
                 .ifPresent(u -> {
                     throw new IllegalArgumentException("Email already exists");
                 });
 
-        return repository.save(user);
+        // save user
+        User savedUser = userRepository.save(user);
+
+        // generate token
+        String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getEmail());
+
+        // attach token to response object
+        savedUser.setToken(token);
+
+        return savedUser;
     }
 
+    // ================= LOGIN =================
     @Override
     public User login(User user) {
 
-        User existing = repository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("not found"));
+        User existingUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email"));
 
-        if (!existing.getPassword().equals(user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+        if (!existingUser.getPassword().equals(user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
         }
 
-        return existing;
+        // generate token
+        String token = jwtUtil.generateToken(existingUser.getId(), existingUser.getEmail());
+
+        // attach token to response object
+        existingUser.setToken(token);
+
+        return existingUser;
     }
 }
