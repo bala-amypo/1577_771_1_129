@@ -6,11 +6,15 @@ import com.example.demo.model.Product;
 import com.example.demo.service.CartItemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/cart-items")
+@SecurityRequirement(name="bearerAuth")
+
 public class CartItemController {
 
     private final CartItemService cartItemService;

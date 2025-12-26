@@ -4,9 +4,13 @@ import com.example.demo.model.Cart;
 import com.example.demo.service.CartService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 
 @RestController
 @RequestMapping("/carts")
+@SecurityRequirement(name="bearerAuth")
+
 public class CartController {
 
     private final CartService service;
