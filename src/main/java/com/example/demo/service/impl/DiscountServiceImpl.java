@@ -1,67 +1,105 @@
-@Override
-public List<DiscountApplication> evaluateDiscounts(Long cartId) {
+package com.example.demo.service.impl;
 
-    Cart cart = cartRepository.findById(cartId)
-            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+import com.example.demo.model.BundleRule;
+import com.example.demo.model.Cart;
+import com.example.demo.model.CartItem;
+import com.example.demo.model.DiscountApplication;
+import com.example.demo.repository.BundleRuleRepository;
+import com.example.demo.repository.CartItemRepository;
+import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.DiscountApplicationRepository;
+import com.example.demo.service.DiscountService;
+import org.springframework.stereotype.Service;
 
-    if (!Boolean.TRUE.equals(cart.getActive())) {
-        throw new IllegalStateException("Cart is inactive");
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
+
+@Service
+public class DiscountServiceImpl implements DiscountService {
+
+    private final BundleRuleRepository bundleRuleRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final DiscountApplicationRepository discountApplicationRepository;
+
+    public DiscountServiceImpl(BundleRuleRepository bundleRuleRepository,
+                               CartRepository cartRepository,
+                               CartItemRepository cartItemRepository,
+                               DiscountApplicationRepository discountApplicationRepository) {
+        this.bundleRuleRepository = bundleRuleRepository;
+        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.discountApplicationRepository = discountApplicationRepository;
     }
 
-    List<CartItem> items = cartItemRepository.findByCartId(cartId);
-    if (items.isEmpty()) {
-        throw new IllegalStateException("Cart has no items");
-    }
+    @Override
+    public List<DiscountApplication> evaluateDiscounts(Long cartId) {
 
-    // Remove old discounts
-    discountApplicationRepository.deleteByCartId(cartId);
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-    Set<Long> productIds = new HashSet<>();
-    BigDecimal total = BigDecimal.ZERO;
+        if (!Boolean.TRUE.equals(cart.getActive())) {
+            return Collections.emptyList();
+        }
 
-    for (CartItem item : items) {
-        productIds.add(item.getProduct().getId());
-        total = total.add(
-                item.getProduct().getPrice()
-                        .multiply(BigDecimal.valueOf(item.getQuantity()))
-        );
-    }
+        // clear previous discounts
+        discountApplicationRepository.deleteByCartId(cartId);
 
-    List<BundleRule> rules = bundleRuleRepository.findByActiveTrue();
-    if (rules.isEmpty()) {
-        throw new IllegalStateException("No active bundle rules");
-    }
+        List<CartItem> items = cartItemRepository.findByCartId(cartId);
+        if (items.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-    List<DiscountApplication> applied = new ArrayList<>();
+        Set<Long> productIds = new HashSet<>();
+        BigDecimal total = BigDecimal.ZERO;
 
-    for (BundleRule rule : rules) {
+        for (CartItem item : items) {
+            productIds.add(item.getProduct().getId());
+            total = total.add(
+                    item.getProduct().getPrice()
+                            .multiply(BigDecimal.valueOf(item.getQuantity()))
+            );
+        }
 
-        boolean eligible = true;
+        List<DiscountApplication> applied = new ArrayList<>();
 
-        for (String pid : rule.getRequiredProductIds().split(",")) {
-            if (!productIds.contains(Long.parseLong(pid.trim()))) {
-                eligible = false;
-                break;
+        for (BundleRule rule : bundleRuleRepository.findByActiveTrue()) {
+
+            boolean eligible = true;
+
+            for (String pid : rule.getRequiredProductIds().split(",")) {
+                if (!productIds.contains(Long.parseLong(pid.trim()))) {
+                    eligible = false;
+                    break;
+                }
+            }
+
+            if (eligible) {
+                DiscountApplication app = new DiscountApplication();
+                app.setCart(cart);
+                app.setBundleRule(rule);
+                app.setDiscountAmount(
+                        total.multiply(BigDecimal.valueOf(rule.getDiscountPercentage()))
+                                .divide(BigDecimal.valueOf(100))
+                );
+                app.setAppliedAt(LocalDateTime.now());
+
+                applied.add(discountApplicationRepository.save(app));
             }
         }
 
-        if (eligible) {
-            DiscountApplication app = new DiscountApplication();
-            app.setCart(cart);
-            app.setBundleRule(rule);
-            app.setDiscountAmount(
-                    total.multiply(BigDecimal.valueOf(rule.getDiscountPercentage()))
-                            .divide(BigDecimal.valueOf(100))
-            );
-            app.setAppliedAt(LocalDateTime.now());
-
-            applied.add(discountApplicationRepository.save(app));
-        }
+        return applied;
     }
 
-    if (applied.isEmpty()) {
-        throw new IllegalStateException("No applicable discounts found");
+    @Override
+    public DiscountApplication getApplicationById(Long id) {
+        return discountApplicationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
-    return applied;
+    @Override
+    public List<DiscountApplication> getApplicationsForCart(Long cartId) {
+        return discountApplicationRepository.findByCartId(cartId);
+    }
 }
