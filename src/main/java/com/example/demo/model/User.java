@@ -29,14 +29,12 @@ public class User {
 
     // ================= CONSTRUCTORS =================
 
-    // No-args constructor (required by JPA)
     public User() {
     }
 
-    // All-args constructor (without token)
     public User(Long id, String email, String password, String role) {
         this.id = id;
-        this.email = email;
+        setEmail(email);
         this.password = password;
         this.role = role;
     }
@@ -55,11 +53,15 @@ public class User {
         return email;
     }
 
+    // ✅ FIXED EMAIL VALIDATION
     public void setEmail(String email) {
-        this.email = email;
+        if (email == null ||
+            !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+        this.email = email.toLowerCase();
     }
 
-    // Password (input only)
     public String getPassword() {
         return password;
     }
@@ -68,13 +70,13 @@ public class User {
         this.password = password;
     }
 
-    // Role (optional)
     public String getRole() {
         return role;
     }
-    
+
+    // ✅ Default role safety
     public void setRole(String role) {
-        this.role = role;
+        this.role = (role == null || role.isBlank()) ? "USER" : role;
     }
 
     // ================= TOKEN =================
