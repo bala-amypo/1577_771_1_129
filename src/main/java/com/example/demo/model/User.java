@@ -1,12 +1,9 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -16,18 +13,31 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
-    private String role;
+    private String role;   // optional (USER / ADMIN)
+
+    /**
+     * JWT token should NOT be stored in DB
+     * This is only for API response
+     */
+    @Transient
+    private String token;
+
+    // ================= CONSTRUCTORS =================
 
     public User() {
     }
 
-    public User(String email, String password, String role) {
+    public User(Long id, String email, String password, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
+
+    // ================= GETTERS & SETTERS =================
 
     public Long getId() {
         return id;
@@ -48,16 +58,26 @@ public class User {
     public String getPassword() {
         return password;
     }
- 
+
     public void setPassword(String password) {
         this.password = password;
     }
- 
+
     public String getRole() {
         return role;
     }
- 
+
     public void setRole(String role) {
         this.role = role;
+    }
+
+    // ===== TOKEN (JWT) =====
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
