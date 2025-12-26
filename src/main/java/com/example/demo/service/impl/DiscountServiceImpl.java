@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -44,17 +41,18 @@ public class DiscountServiceImpl implements DiscountService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
 
+        // ✅ REQUIRED: inactive cart → empty list
         if (!Boolean.TRUE.equals(cart.getActive())) {
-            throw new IllegalStateException("Cart is inactive");
+            return Collections.emptyList();
         }
+
+        // Remove previous discounts
+        discountApplicationRepository.deleteByCartId(cartId);
 
         List<CartItem> items = cartItemRepository.findByCartId(cartId);
         if (items.isEmpty()) {
-            throw new IllegalStateException("Cart has no items");
+            return Collections.emptyList();
         }
-
-        // Remove old discounts
-        discountApplicationRepository.deleteByCartId(cartId);
 
         Set<Long> productIds = new HashSet<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -69,7 +67,7 @@ public class DiscountServiceImpl implements DiscountService {
 
         List<BundleRule> rules = bundleRuleRepository.findByActiveTrue();
         if (rules.isEmpty()) {
-            throw new IllegalStateException("No active bundle rules");
+            return Collections.emptyList();
         }
 
         List<DiscountApplication> applied = new ArrayList<>();
@@ -77,9 +75,7 @@ public class DiscountServiceImpl implements DiscountService {
         for (BundleRule rule : rules) {
 
             boolean eligible = true;
-            String[] requiredIds = rule.getRequiredProductIds().split(",");
-
-            for (String pid : requiredIds) {
+            for (String pid : rule.getRequiredProductIds().split(",")) {
                 if (!productIds.contains(Long.parseLong(pid.trim()))) {
                     eligible = false;
                     break;
@@ -100,10 +96,7 @@ public class DiscountServiceImpl implements DiscountService {
             }
         }
 
-        if (applied.isEmpty()) {
-            throw new IllegalStateException("No applicable discounts found");
-        }
-
+        // ✅ REQUIRED: no matching bundle → empty list
         return applied;
     }
 
