@@ -3,8 +3,8 @@ package com.example.demo.config;
 import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,47 +21,37 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    // ---------------- Password Encoder ----------------
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // ---------------- Security Filter Chain ----------------
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ REQUIRED
+            // Disable CSRF (JWT based)
             .csrf(csrf -> csrf.disable())
 
-            // ✅ REQUIRED
+            // Stateless session
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // ✅ ENABLE ANONYMOUS ACCESS (CRITICAL)
-            .anonymous(anonymous -> anonymous.enable())
-
-            // ✅ HANDLE UNAUTHORIZED PROPERLY
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint(
-                    (request, response, authException) ->
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
-                )
-            )
-
-            // ✅ AUTHORIZATION RULES
+            // Authorization rules
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/auth/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui/index.html",
-                    "/v3/api-docs/**"
-                ).permitAll()
-                .anyRequest().authenticated()
+                    .requestMatchers(
+                            "/auth/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/swagger-ui/index.html",
+                            "/v3/api-docs/**"
+                    ).permitAll()
+                    .anyRequest().authenticated()
             )
 
-            // ✅ JWT FILTER
+            // Add JWT filter
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
