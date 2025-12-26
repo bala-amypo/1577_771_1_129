@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Cart;
 import com.example.demo.service.CartService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,22 +16,23 @@ public class CartController {
     }
 
     @PostMapping("/{userId}")
-    public Cart createCart(@PathVariable Long userId) {
-        return service.createCart(userId);
+    public ResponseEntity<Cart> createCart(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.createCart(userId));
     }
 
     @GetMapping("/user/{userId}")
-    public Cart getCartForUser(@PathVariable Long userId) {
-        return service.getActiveCartForUser(userId);
+    public ResponseEntity<Cart> getCartForUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.getActiveCartForUser(userId));
     }
 
     @GetMapping("/{id}")
-    public Cart getCartById(@PathVariable Long id) {
-        return service.getCartById(id);
+    public ResponseEntity<Cart> getCartById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getCartById(id));
     }
 
     @DeleteMapping("/{id}")
-    public void deactivateCart(@PathVariable Long id) {
+    public ResponseEntity<String> deactivateCart(@PathVariable Long id) {
         service.deactivateCart(id);
+        return ResponseEntity.ok("Cart deactivated successfully");
     }
 }
