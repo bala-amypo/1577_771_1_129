@@ -1,8 +1,10 @@
 package com.example.demo.security;
 
+import com.example.demo.model.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -17,28 +19,36 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    private Key getKey() {
+    private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // ------------------ Generate Token ------------------
-    // Now accepts email, role, and userId (Long)
-    public String generateToken(String email, String role, Long userId) {
+    // ✅ USED BY CONTROLLER
+    public String createToken(Long userId, String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
-                .claim("userId", String.valueOf(userId)) // Convert Long → String
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ------------------ Validate Token ------------------
+    // ✅ REQUIRED BY TEST (BACKWARD COMPATIBILITY)
+    public String generateToken(UserDetails userDetails, User user) {
+        return createToken(
+                user.getId(),
+                userDetails.getUsername(),
+                user.getRole()
+        );
+    }
+
+    // ✅ EXISTING METHOD
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(getKey())
+                    .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -47,33 +57,25 @@ public class JwtUtil {
         }
     }
 
-    // ------------------ Extract Email ------------------
+    // ✅ REQUIRED BY TEST (OVERLOADED METHOD)
+    public boolean validateToken(String token, UserDetails userDetails) {
+        return validateToken(token)
+                && getEmail(token).equals(userDetails.getUsername());
+    }
+
     public String getEmail(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return getClaims(token).getSubject();
     }
 
-    // ------------------ Extract Role ------------------
     public String getRole(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("role", String.class);
+        return getClaims(token).get("role", String.class);
     }
 
-    // ------------------ Extract UserId ------------------
-    public String getUserId(String token) {
+    private Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getKey())
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .get("userId", String.class);
+                .getBody();
     }
 }

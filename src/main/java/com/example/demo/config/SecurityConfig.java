@@ -1,8 +1,8 @@
-package com.example.demo.config;
+package com.example.demo.security;
 
-import com.example.demo.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,45 +15,38 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtUtil jwtUtil;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfig(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
 
-    // ---------------- Password Encoder ----------------
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ---------------- Security Filter Chain ----------------
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // Disable CSRF (JWT based)
             .csrf(csrf -> csrf.disable())
-
-            // Stateless session
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-            // Authorization rules
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                            "/auth/**",
-                            "/swagger-ui/**",
-                            "/swagger-ui.html",
-                            "/swagger-ui/index.html",
-                            "/v3/api-docs/**"
-                    ).permitAll()
+                    .requestMatchers("/auth/**",
+                                     "/swagger-ui/**",
+                                     "/v3/api-docs/**",
+                                     "/hello-servlet").permitAll()
                     .anyRequest().authenticated()
             )
-
-            // Add JWT filter
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil);
     }
 }
