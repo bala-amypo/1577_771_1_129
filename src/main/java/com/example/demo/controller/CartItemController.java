@@ -4,6 +4,7 @@ import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
 import com.example.demo.model.Product;
 import com.example.demo.service.CartItemService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public class CartItemController {
     }
 
     @PostMapping
-    public CartItem addItem(@RequestParam Long cartId,
-                            @RequestParam Long productId,
-                            @RequestParam Integer quantity) {
+    public ResponseEntity<CartItem> addItem(@RequestParam Long cartId,
+                                            @RequestParam Long productId,
+                                            @RequestParam Integer quantity) {
 
         CartItem item = new CartItem();
 
@@ -35,22 +36,25 @@ public class CartItemController {
         item.setProduct(product);
         item.setQuantity(quantity);
 
-        return cartItemService.addItemToCart(item);
+        CartItem savedItem = cartItemService.addItemToCart(item);
+        return ResponseEntity.ok(savedItem);
     }
 
     @GetMapping("/{cartId}")
-    public List<CartItem> getItems(@PathVariable Long cartId) {
-        return cartItemService.getItemsForCart(cartId);
+    public ResponseEntity<List<CartItem>> getItems(@PathVariable Long cartId) {
+        return ResponseEntity.ok(cartItemService.getItemsForCart(cartId));
     }
 
     @PutMapping("/{id}")
-    public CartItem updateItem(@PathVariable Long id,
-                               @RequestParam Integer quantity) {
-        return cartItemService.updateItem(id, quantity);
+    public ResponseEntity<String> updateItem(@PathVariable Long id,
+                                             @RequestParam Integer quantity) {
+        cartItemService.updateItem(id, quantity);
+        return ResponseEntity.ok("Cart item updated successfully");
     }
 
     @DeleteMapping("/{id}")
-    public void removeItem(@PathVariable Long id) {
+    public ResponseEntity<String> removeItem(@PathVariable Long id) {
         cartItemService.removeItem(id);
+        return ResponseEntity.ok("Cart item removed successfully");
     }
 }
