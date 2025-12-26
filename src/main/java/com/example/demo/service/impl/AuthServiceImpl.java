@@ -17,29 +17,25 @@ public class AuthServiceImpl implements AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    // ================= REGISTER =================
+    // -------- REGISTER --------
     @Override
     public User register(User user) {
 
-        // check existing user
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(u -> {
                     throw new IllegalArgumentException("Email already exists");
                 });
 
-        // save user
         User savedUser = userRepository.save(user);
 
-        // generate token
+        // ✅ AUTO TOKEN
         String token = jwtUtil.generateToken(savedUser.getId(), savedUser.getEmail());
-
-        // attach token to response object
         savedUser.setToken(token);
 
         return savedUser;
     }
 
-    // ================= LOGIN =================
+    // -------- LOGIN --------
     @Override
     public User login(User user) {
 
@@ -50,10 +46,8 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid password");
         }
 
-        // generate token
+        // ✅ AUTO TOKEN
         String token = jwtUtil.generateToken(existingUser.getId(), existingUser.getEmail());
-
-        // attach token to response object
         existingUser.setToken(token);
 
         return existingUser;

@@ -16,28 +16,15 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role;   // optional (USER / ADMIN)
+    private String role;
 
-    /**
-     * JWT token should NOT be stored in DB
-     * This is only for API response
-     */
+    // 🔹 Auto-generated token (NOT stored in DB)
     @Transient
     private String token;
 
-    // ================= CONSTRUCTORS =================
+    public User() {}
 
-    public User() {
-    }
-
-    public User(Long id, String email, String password, String role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    // ================= GETTERS & SETTERS =================
+    // ---------- Getters & Setters ----------
 
     public Long getId() {
         return id;
@@ -58,7 +45,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-
+    
     public void setPassword(String password) {
         this.password = password;
     }
@@ -66,12 +53,12 @@ public class User {
     public String getRole() {
         return role;
     }
-
+    
     public void setRole(String role) {
         this.role = role;
     }
 
-    // ===== TOKEN (JWT) =====
+    // ---------- TOKEN ----------
 
     public String getToken() {
         return token;
