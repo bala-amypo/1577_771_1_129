@@ -23,7 +23,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // Create JWT token
+    // ✅ USED BY CONTROLLER
     public String createToken(Long userId, String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
@@ -35,7 +35,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Generate token for tests
+    // ✅ REQUIRED BY TEST (BACKWARD COMPATIBILITY)
     public String generateToken(UserDetails userDetails, User user) {
         return createToken(
                 user.getId(),
@@ -44,7 +44,7 @@ public class JwtUtil {
         );
     }
 
-    // Validate token
+    // ✅ EXISTING METHOD
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -57,6 +57,7 @@ public class JwtUtil {
         }
     }
 
+    // ✅ REQUIRED BY TEST (OVERLOADED METHOD)
     public boolean validateToken(String token, UserDetails userDetails) {
         return validateToken(token)
                 && getEmail(token).equals(userDetails.getUsername());
