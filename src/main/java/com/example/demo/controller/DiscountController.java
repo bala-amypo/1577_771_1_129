@@ -19,21 +19,19 @@ public class DiscountController {
         this.discountService = discountService;
     }
 
-    // ✅ Always evaluates + returns discounts
     @GetMapping("/cart/{cartId}")
     public List<DiscountApplication> getByCart(@PathVariable Long cartId) {
         return discountService.evaluateDiscounts(cartId);
     }
 
-    // ✅ Works ONLY after evaluation
     @GetMapping("/{id}")
     public DiscountApplication getById(@PathVariable Long id) {
         return discountService.getApplicationById(id);
     }
-
-    // Optional manual trigger
     @PostMapping("/evaluate/{cartId}")
-    public void evaluate(@PathVariable Long cartId) {
-        discountService.evaluateDiscounts(cartId);
-    }
+public String evaluate(@PathVariable Long cartId) {
+    discountService.evaluateDiscounts(cartId);
+    return "Discounts evaluated successfully for cartId: " + cartId;
+}
+
 }
