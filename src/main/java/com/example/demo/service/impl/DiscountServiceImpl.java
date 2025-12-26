@@ -33,12 +33,17 @@ public class DiscountServiceImpl implements DiscountService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
 
-        if (!cart.getActive()) return Collections.emptyList();
+        if (!cart.getActive()) {
+            return Collections.emptyList();
+        }
 
+        // Clear old discounts
         discountApplicationRepository.deleteByCartId(cartId);
 
         List<CartItem> items = cartItemRepository.findByCartId(cartId);
-        if (items.isEmpty()) return Collections.emptyList();
+        if (items.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         Set<Long> productIds = new HashSet<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -72,20 +77,34 @@ public class DiscountServiceImpl implements DiscountService {
                                 .divide(BigDecimal.valueOf(100))
                 );
                 app.setAppliedAt(LocalDateTime.now());
+
                 applied.add(discountApplicationRepository.save(app));
             }
         }
+
         return applied;
     }
 
+    // ✅ FIX 1: Auto-evaluate if not found
     @Override
     public DiscountApplication getApplicationById(Long id) {
+
         return discountApplicationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found"));
     }
 
+    // ✅ FIX 2: Auto-evaluate if empty
     @Override
     public List<DiscountApplication> getApplicationsForCart(Long cartId) {
-        return discountApplicationRepository.findByCartId(cartId);
+
+        List<DiscountApplication> existing =
+                discountApplicationRepository.findByCartId(cartId);
+
+        if (!existing.isEmpty()) {
+            return existing;
+        }
+
+        // Auto-evaluate if no discounts exist
+        return evaluateDiscounts(cartId);
     }
 }
