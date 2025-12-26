@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.BundleRule;
 import com.example.demo.service.BundleRuleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,27 +18,30 @@ public class BundleRuleController {
     }
 
     @PostMapping
-    public BundleRule create(@RequestBody BundleRule rule) {
-        return service.createRule(rule);
+    public ResponseEntity<BundleRule> create(@RequestBody BundleRule rule) {
+        return ResponseEntity.ok(service.createRule(rule));
     }
 
     @PutMapping("/{id}")
-    public BundleRule update(@PathVariable Long id, @RequestBody BundleRule rule) {
-        return service.updateRule(id, rule);
+    public ResponseEntity<String> update(@PathVariable Long id,
+                                         @RequestBody BundleRule rule) {
+        service.updateRule(id, rule);
+        return ResponseEntity.ok("Bundle rule updated successfully");
     }
 
     @GetMapping("/{id}")
-    public BundleRule get(@PathVariable Long id) {
-        return service.getRuleById(id);
+    public ResponseEntity<BundleRule> get(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getRuleById(id));
     }
 
     @GetMapping("/active")
-    public List<BundleRule> active() {
-        return service.getActiveRules();
+    public ResponseEntity<List<BundleRule>> active() {
+        return ResponseEntity.ok(service.getActiveRules());
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable Long id) {
+    public ResponseEntity<String> deactivate(@PathVariable Long id) {
         service.deactivateRule(id);
+        return ResponseEntity.ok("Bundle rule deactivated successfully");
     }
 }
