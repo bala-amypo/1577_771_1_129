@@ -2,9 +2,8 @@ package com.example.demo.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,32 +20,47 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
+    // ✅ Password encoder (required for AuthServiceImpl)
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // ✅ Main security configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            // ❌ Disable CSRF (JWT based API)
             .csrf(csrf -> csrf.disable())
+
+            // ❌ No session (JWT = stateless)
             .sessionManagement(session ->
-                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/**",
-                                     "/swagger-ui/**",
-                                     "/v3/api-docs/**",
-                                     "/hello-servlet").permitAll()
-                    .anyRequest().authenticated()
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+            // ✅ Authorization rules
+            .authorizeHttpRequests(auth -> auth
+
+                // 🔓 PUBLIC ENDPOINTS
+                .requestMatchers(
+                        "/auth/**",
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/hello-servlet"
+                ).permitAll()
+
+                // 🔒 EVERYTHING ELSE NEEDS JWT
+                .anyRequest().authenticated()
+            )
+
+            // ✅ JWT filter
+            .addFilterBefore(
+                    new JwtAuthenticationFilter(jwtUtil),
+                    UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
-    }
-
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtUtil);
     }
 }
