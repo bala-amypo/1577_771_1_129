@@ -18,7 +18,6 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
-        // Register user and generate token
         User savedUser = service.register(user);
         return ResponseEntity.ok(savedUser);
     }
