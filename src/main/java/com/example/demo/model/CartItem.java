@@ -46,12 +46,7 @@ public class CartItem {
         this.product = product;
     }
 
-    /**
-     * ❗ IMPORTANT:
-     * NO validation here.
-     * Tests expect setter to accept any value.
-     * Validation is handled in service layer.
-     */
+    
     public Integer getQuantity() {
         return quantity;
     }

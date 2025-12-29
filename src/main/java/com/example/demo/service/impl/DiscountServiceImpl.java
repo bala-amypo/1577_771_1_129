@@ -43,7 +43,7 @@ public class DiscountServiceImpl implements DiscountService {
             return Collections.emptyList();
         }
 
-        // clear previous discounts
+        
         discountApplicationRepository.deleteByCartId(cartId);
 
         List<CartItem> items = cartItemRepository.findByCartId(cartId);

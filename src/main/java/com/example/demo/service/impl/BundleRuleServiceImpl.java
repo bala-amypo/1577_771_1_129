@@ -20,13 +20,13 @@ public class BundleRuleServiceImpl implements BundleRuleService {
     @Override
     public BundleRule createRule(BundleRule rule) {
 
-        // ✅ Required products validation
+        
         if (rule.getRequiredProductIds() == null ||
             rule.getRequiredProductIds().trim().isEmpty()) {
             throw new IllegalArgumentException("Required products cannot be empty");
         }
 
-        // ✅ Discount range validation
+        
         if (rule.getDiscountPercentage() == null ||
             rule.getDiscountPercentage() < 0 ||
             rule.getDiscountPercentage() > 100) {

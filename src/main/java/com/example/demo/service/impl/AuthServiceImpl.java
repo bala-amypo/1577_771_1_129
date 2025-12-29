@@ -22,7 +22,7 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ---------------- REGISTER ----------------
+    
     @Override
     public User register(User user) {
 
@@ -31,13 +31,13 @@ public class AuthServiceImpl implements AuthService {
                     throw new IllegalArgumentException("Email already exists");
                 });
 
-        // Encode password
+        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        // Save user
+        
         User savedUser = userRepository.save(user);
 
-        // ✅ CORRECT TOKEN GENERATION
+        
         String token = jwtUtil.createToken(
                 savedUser.getId(),
                 savedUser.getEmail(),
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         return savedUser;
     }
 
-    // ---------------- LOGIN ----------------
+    
     @Override
     public User login(User user) {
 
@@ -59,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Invalid password");
         }
 
-        // ✅ CORRECT TOKEN GENERATION
+        
         String token = jwtUtil.createToken(
                 existingUser.getId(),
                 existingUser.getEmail(),

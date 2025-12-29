@@ -19,16 +19,12 @@ public class User {
 
     private String role;
 
-    /**
-     * Token is auto-generated and returned in response only.
-     * Swagger will NOT ask this as input.
-     */
+   
     @Transient
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private String token;
 
-    // ================= CONSTRUCTORS =================
-
+   
     public User() {
     }
 
@@ -39,8 +35,7 @@ public class User {
         this.role = role;
     }
 
-    // ================= GETTERS & SETTERS =================
-
+   
     public Long getId() {
         return id;
     }
@@ -53,7 +48,7 @@ public class User {
         return email;
     }
 
-    // ✅ FIXED EMAIL VALIDATION
+    
     public void setEmail(String email) {
         if (email == null ||
             !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
@@ -74,13 +69,12 @@ public class User {
         return role;
     }
 
-    // ✅ Default role safety
+    
     public void setRole(String role) {
         this.role = (role == null || role.isBlank()) ? "USER" : role;
     }
 
-    // ================= TOKEN =================
-
+    
     public String getToken() {
         return token;
     }
