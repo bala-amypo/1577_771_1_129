@@ -15,7 +15,7 @@ public class AuthController {
         this.service = service;
     }
 
-    // ------------------- REGISTER -------------------
+    
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         // Register user and generate token
@@ -23,10 +23,10 @@ public class AuthController {
         return ResponseEntity.ok(savedUser);
     }
 
-    // ------------------- LOGIN -------------------
+    
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
-        // Login user and generate token
+        
         User loggedInUser = service.login(user);
         return ResponseEntity.ok(loggedInUser);
     }

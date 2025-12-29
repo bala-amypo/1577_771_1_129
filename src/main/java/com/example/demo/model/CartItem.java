@@ -20,12 +20,12 @@ public class CartItem {
 
     private Integer quantity;
 
-    // ✅ REQUIRED by tests
+    
     public Long getId() {
         return id;
     }
 
-    // ✅ REQUIRED by tests
+    
     public void setId(Long id) {
         this.id = id;
     }

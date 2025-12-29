@@ -20,29 +20,29 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ Password encoder (required for AuthServiceImpl)
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // ✅ Main security configuration
+   
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // ❌ Disable CSRF (JWT based API)
+            
             .csrf(csrf -> csrf.disable())
 
-            // ❌ No session (JWT = stateless)
+            
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // ✅ Authorization rules
+            
             .authorizeHttpRequests(auth -> auth
 
-                // 🔓 PUBLIC ENDPOINTS
+                
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
@@ -51,11 +51,11 @@ public class SecurityConfig {
                         "/hello-servlet"
                 ).permitAll()
 
-                // 🔒 EVERYTHING ELSE NEEDS JWT
+                
                 .anyRequest().authenticated()
             )
 
-            // ✅ JWT filter
+            
             .addFilterBefore(
                     new JwtAuthenticationFilter(jwtUtil),
                     UsernamePasswordAuthenticationFilter.class
